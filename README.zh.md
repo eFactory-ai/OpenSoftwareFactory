@@ -12,7 +12,7 @@ pnpm sf
 
 多数 agent 工具止步于编辑。它们把代码写进你的工作目录便交还给你，而把代码变成产品的每一步——验证其可运行、评审、发布、为其所需的基础设施付费、以及此后的运维——统统留给一个守着终端的人。
 
-OpenSoftwareFactory 的前提是：这些步骤才是真正的工作，无法完成它们的 agent 等于什么都没完成。工厂接下一个目标，并贯穿整个生命周期地对其负责：
+OpenSoftwareFactory 的前提是：这些步骤才是真正的工作，无法完成它们的 agent 等于什么都没完成。工厂接下一个目标，并贯穿整个 SDLC 生命周期地对其负责：
 
 | 阶段 | 工厂做什么 |
 |---|---|
@@ -28,7 +28,7 @@ OpenSoftwareFactory 的前提是：这些步骤才是真正的工作，无法完
 
 ## 当前进展
 
-OpenSoftwareFactory 以插件形式构建在 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 之上，由后者提供 agent 循环、工具策略、沙箱与持久会话。理解、规划、构建、验证与评审今天已可用，因为 harness 提供了它们。
+OpenSoftwareFactory 是 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的一个分叉，并以插件形式构建其上，由后者提供 agent 循环、工具策略、沙箱与持久会话。理解、规划、构建、验证与评审今天已可用，因为 harness 提供了它们。
 
 **部署尚不存在，这正是当前的里程碑。** 一个 agent，能把你工作目录中的项目发布到互联网上——发布预览、查询域名，并通过 [PromptPay](https://github.com/AaEll/PromptPay) 完成支付——且凭据不会到达模型。
 

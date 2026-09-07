@@ -12,7 +12,7 @@ pnpm sf
 
 Most agent tools stop at the edit. They write code into your working directory and hand it back, leaving every step that turns code into a product — proving it runs, reviewing it, shipping it, paying for the infrastructure it needs, watching it afterwards — to a human with a terminal.
 
-OpenSoftwareFactory is built on the premise that those steps are the work, and that an agent that cannot finish them has not finished anything. A factory takes an objective and owns it through the whole lifecycle:
+OpenSoftwareFactory is built on the premise that those steps are the work, and that an agent that cannot finish them has not finished anything. A factory takes an objective and owns it through the whole SDLC lifecycle:
 
 | Stage | What the factory does |
 |---|---|
@@ -28,7 +28,7 @@ The destination is a factory that runs that loop with a human at only the decisi
 
 ## Where it stands
 
-OpenSoftwareFactory is built as plugins on the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness), which supplies the agent loop, tool policy, sandboxing, and durable sessions. Understanding, planning, building, proving, and reviewing work today because the harness provides them.
+OpenSoftwareFactory is built as a fork with plugins on the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness), which supplies the agent loop, tool policy, sandboxing, and durable sessions. Understanding, planning, building, proving, and reviewing work today because the harness provides them.
 
 **Deploying does not exist yet, and that is the current milestone.** An agent that takes the project in your working directory and puts it on the internet — publish a preview, check a domain, and pay for it through [PromptPay](https://github.com/AaEll/PromptPay) — with no credential reaching the model.
 
