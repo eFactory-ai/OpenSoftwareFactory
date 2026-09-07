@@ -36,20 +36,31 @@ OpenSoftwareFactory is built as a fork with plugins on the [DeepSeek Harness](ht
 
 <a id="run-from-source"></a>
 
+## Install
+
+Requires Node `^22.19 || >=24` and pnpm 11.
+
+```sh
+git clone git@github.com:eFactory-ai/OpenSoftwareFactory.git
+cd OpenSoftwareFactory
+pnpm install
+pnpm run build
+```
+
+Put `sf` on your `PATH` from the checkout:
+
+```sh
+pnpm --dir apps/cli link --global
+```
+
 ## Run
 
 ```sh
-pnpm install
-pnpm run build
-pnpm sf web                        # the browser UI at http://127.0.0.1:3080
-pnpm sf --profile headless "task"  # one shot in the current directory, then exit
+sf web                        # the browser UI at http://127.0.0.1:3080
+sf --profile headless "task"  # one shot in the current directory, then exit
 ```
 
-For an `sf` command on your `PATH`, alias it to this checkout:
-
-```sh
-alias sf='pnpm --dir /path/to/OpenSoftwareFactory sf'
-```
+Without the global link the same commands work through pnpm, as `pnpm sf web`.
 
 ## Develop
 

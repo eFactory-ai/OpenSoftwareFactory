@@ -38,20 +38,31 @@ OpenSoftwareFactory 是 [DeepSeek Harness](https://github.com/deepseek-ai/deepse
 
 <a id="run-from-source"></a>
 
+## 安装
+
+需要 Node `^22.19 || >=24` 与 pnpm 11。
+
+```sh
+git clone git@github.com:eFactory-ai/OpenSoftwareFactory.git
+cd OpenSoftwareFactory
+pnpm install
+pnpm run build
+```
+
+将 `sf` 从本检出目录加入 `PATH`：
+
+```sh
+pnpm --dir apps/cli link --global
+```
+
 ## 运行
 
 ```sh
-pnpm install
-pnpm run build
-pnpm sf web                        # the browser UI at http://127.0.0.1:3080
-pnpm sf --profile headless "task"  # one shot in the current directory, then exit
+sf web                        # the browser UI at http://127.0.0.1:3080
+sf --profile headless "task"  # one shot in the current directory, then exit
 ```
 
-若希望在 `PATH` 中直接使用 `sf` 命令，可将其别名指向本检出目录：
-
-```sh
-alias sf='pnpm --dir /path/to/OpenSoftwareFactory sf'
-```
+若未做全局链接，同样的命令可通过 pnpm 执行，例如 `pnpm sf web`。
 
 ## 开发
 
