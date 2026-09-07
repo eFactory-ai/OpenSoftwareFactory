@@ -5,7 +5,7 @@
 **一座软件工厂，负责端到端 agent 项目的完整软件生命周期。** 输入一个目标，产出可运行且已部署的软件。
 
 ```sh
-pnpm sf
+pnpm sf web
 ```
 
 ## 愿景
@@ -34,13 +34,17 @@ OpenSoftwareFactory 是 [DeepSeek Harness](https://github.com/deepseek-ai/deepse
 
 [`MVP.md`](MVP.md) 定义了范围：为何选择部署这一切片、它新增哪些能力接缝、实施计划，以及哪些内容被刻意排除。
 
+<a id="run"></a>
+
+<a id="run-from-source"></a>
+
 ## 运行
 
 ```sh
 pnpm install
 pnpm run build
-pnpm sf            # 在当前目录中启动 agent
-pnpm sf web        # 浏览器 UI，位于 http://127.0.0.1:3080
+pnpm sf web                        # the browser UI at http://127.0.0.1:3080
+pnpm sf --profile headless "task"  # one shot in the current directory, then exit
 ```
 
 若希望在 `PATH` 中直接使用 `sf` 命令，可将其别名指向本检出目录：
@@ -51,7 +55,7 @@ alias sf='pnpm --dir /path/to/OpenSoftwareFactory sf'
 
 ## 开发
 
-先阅读 [`AGENTS.md`](AGENTS.md) 了解工作规则，[`MVP.md`](MVP.md) 了解我们正在构建的内容，[docs/architecture.md](docs/architecture.md) 了解 harness 的整体结构。
+先阅读 [`AGENTS.md`](AGENTS.md) 了解工作规则，[`MVP.md`](MVP.md) 了解我们正在构建的内容，[docs/architecture.zh.md](docs/architecture.zh.md) 了解 harness 的整体结构。
 
 本仓库跟踪上游 DeepSeek Harness。请使用 `scripts/osf-sync.sh` 同步，切勿使用 `git rebase`——原因见 `AGENTS.md`。
 

@@ -5,7 +5,7 @@ English | [中文](README.zh.md)
 **A software factory that owns the full software lifecycle for end-to-end agentic projects.** An objective goes in; running, deployed software comes out.
 
 ```sh
-pnpm sf
+pnpm sf web
 ```
 
 ## The vision
@@ -34,13 +34,15 @@ OpenSoftwareFactory is built as a fork with plugins on the [DeepSeek Harness](ht
 
 [`MVP.md`](MVP.md) is the scope: why deployment is the slice, the capability seams it adds, the implementation plan, and what is deliberately out of it.
 
+<a id="run-from-source"></a>
+
 ## Run
 
 ```sh
 pnpm install
 pnpm run build
-pnpm sf            # the agent, in the current directory
-pnpm sf web        # the browser UI at http://127.0.0.1:3080
+pnpm sf web                        # the browser UI at http://127.0.0.1:3080
+pnpm sf --profile headless "task"  # one shot in the current directory, then exit
 ```
 
 For an `sf` command on your `PATH`, alias it to this checkout:
