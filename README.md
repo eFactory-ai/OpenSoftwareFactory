@@ -1,63 +1,83 @@
-# DeepSeek Harness
+# OpenSoftwareFactory
 
 English | [中文](README.zh.md)
 
-DeepSeek Harness (`dsh`) is an open-source agent harness developed by [DeepSeek AI](https://deepseek.com).
+**A software factory that owns the full software lifecycle for end-to-end agentic projects.** An objective goes in; running, deployed software comes out.
 
-It is built on an **everything-is-a-plugin** architecture and powered by [Cordis](https://github.com/cordiverse/cordis), whose design is described in [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512).
+```sh
+pnpm sf web
+```
 
-Documentation: [https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)
+## The vision
 
-## Developer preview
+Most agent tools stop at the edit. They write code into your working directory and hand it back, leaving every step that turns code into a product — proving it runs, reviewing it, shipping it, paying for the infrastructure it needs, watching it afterwards — to a human with a terminal.
 
-DeepSeek Harness is in _developer preview_ and iterating rapidly. **THERE WILL BE COMPATIBILITY-BREAKING CHANGES.**
+OpenSoftwareFactory is built on the premise that those steps are the work, and that an agent that cannot finish them has not finished anything. A factory takes an objective and owns it through the whole SDLC lifecycle:
 
-Review the [safety notice](SAFETY.md) before running the project.
+| Stage | What the factory does |
+|---|---|
+| **Understand** | Ask what it needs to know, and stop asking once it knows enough |
+| **Plan** | Propose the work in steps you can redirect in plain language, with a check that proves each one |
+| **Build** | Edit the real repository under policy, in place, with the diff always visible |
+| **Prove** | Run the check, feed failures back to itself, and stop when it cannot pass |
+| **Review** | Show what changed, keep or revert it file by file, and never commit on your behalf |
+| **Deploy** | Publish it, claim a domain, and pay for both — without a credential ever reaching the model |
+| **Operate** | Know what it deployed and where, so the next change updates rather than orphans it |
+
+The destination is a factory that runs that loop with a human at only the decision points they care about: approve the plan, keep the result, authorize the spend. Everything between those points is the agent's job.
+
+## Where it stands
+
+OpenSoftwareFactory is built as a fork with plugins on the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness), which supplies the agent loop, tool policy, sandboxing, and durable sessions. Understanding, planning, building, proving, and reviewing work today because the harness provides them.
+
+**Deploying does not exist yet, and that is the current milestone.** An agent that takes the project in your working directory and puts it on the internet — publish a preview, check a domain, and pay for it through [PromptPay](https://github.com/AaEll/PromptPay) — with no credential reaching the model.
+
+[`MVP.md`](MVP.md) is the scope: why deployment is the slice, the capability seams it adds, the implementation plan, and what is deliberately out of it.
+
+<a id="run-from-source"></a>
+
+## Install
+
+Requires Node `^22.19 || >=24` and pnpm 11.
+
+```sh
+git clone git@github.com:eFactory-ai/OpenSoftwareFactory.git
+cd OpenSoftwareFactory
+pnpm install
+pnpm run build
+```
+
+Put `sf` on your `PATH` from the checkout:
+
+```sh
+cd apps/cli
+pnpm link --global
+cd ../..
+```
+
+Confirm that your shell resolves the new launcher:
+
+```sh
+type -a sf
+```
+
+The result should point to pnpm's global bin directory. If another program named `sf` appears first, remove or rename that older command, then run `rehash` and check again.
 
 ## Run
 
-### Run from `npm`
-
-Install `Node.js`, then run:
-
 ```sh
-npx @deepseek-ai/dsh web
+sf web                        # the browser UI at http://127.0.0.1:3080
+sf --profile headless "task"  # one shot in the current directory, then exit
 ```
 
-The command starts the Web UI at `http://127.0.0.1:3080` by default and opens it in the default browser for a local launch. An SSH launch only prints the host URL because the SSH client or editor owns the local forwarded address. Pass `--no-open` to run the server without opening a browser. See [Web UI guide](docs/user/guide/index.md).
+Without the global link the same commands work through pnpm, as `pnpm sf web`.
 
-### Run from source
+## Develop
 
-To run from a repository checkout:
+Start with [`AGENTS.md`](AGENTS.md) for the working rules, [`MVP.md`](MVP.md) for what we are building, and [docs/architecture.md](docs/architecture.md) for how the harness fits together.
 
-```sh
-git clone https://github.com/deepseek-ai/deepseek-harness.git
-cd deepseek-harness
-pnpm install
-pnpm run build
-pnpm dsh web
-```
-
-`pnpm run build` prepares the repository artifacts. `pnpm dsh web` uses those built artifacts without rebuilding.
-
-## Community and support
-
-- Submit feedback or bug reports through [GitHub Discussions](https://github.com/deepseek-ai/deepseek-harness/discussions).
-- Add the [`dsh-plugin`](https://github.com/topics/dsh-plugin) topic to your plugin repository for discoverability.
-- Join <a href="https://discord.gg/Ycq5dCaS4">DeepSeek Harness Discord community</a>.
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Development
-
-Start with the [development guide](docs/development.md) and [architecture documentation](docs/architecture.md).
-
-For agents, follow [AGENTS.md](AGENTS.md).
+This repository tracks upstream DeepSeek Harness. Sync with `scripts/osf-sync.sh`, never `git rebase` — `AGENTS.md` has the reason.
 
 ## License
 
-[MIT](LICENSE)
-
-Third-party dependencies and their licenses are disclosed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+[MIT](LICENSE). Upstream harness sources and third-party dependencies keep their own licenses, disclosed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

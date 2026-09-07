@@ -1,84 +1,85 @@
-# DeepSeek Harness
+# OpenSoftwareFactory
 
 [English](README.md) | 中文
 
-DeepSeek Harness（`dsh`）是由 [DeepSeek AI](https://deepseek.com) 开发的开源 agent harness（智能体框架）。
+**一座软件工厂，负责端到端 agent 项目的完整软件生命周期。** 输入一个目标，产出可运行且已部署的软件。
 
-它构建于**一切皆插件**的架构之上，由 [Cordis](https://github.com/cordiverse/cordis) 驱动，其设计参见论文 [_A Programming Paradigm for Spatiotemporal Composability_](https://arxiv.org/abs/2608.25512)。
+```sh
+pnpm sf web
+```
 
-文档：[https://deepseek-harness.github.io/deepseek-harness/](https://deepseek-harness.github.io/deepseek-harness/)
+## 愿景
 
-## 开发者预览
+多数 agent 工具止步于编辑。它们把代码写进你的工作目录便交还给你，而把代码变成产品的每一步——验证其可运行、评审、发布、为其所需的基础设施付费、以及此后的运维——统统留给一个守着终端的人。
 
-DeepSeek Harness 处于 _开发者预览_ 阶段，正在快速迭代。**未来将出现破坏兼容性的变更。**
+OpenSoftwareFactory 的前提是：这些步骤才是真正的工作，无法完成它们的 agent 等于什么都没完成。工厂接下一个目标，并贯穿整个 SDLC 生命周期地对其负责：
 
-运行本项目前，请阅读[安全说明](SAFETY.zh.md)。
+| 阶段 | 工厂做什么 |
+|---|---|
+| **理解** | 询问它需要知道的事，并在知道得足够多时停止追问 |
+| **规划** | 以你可用自然语言调整的步骤提出方案，每步都带一项验证 |
+| **构建** | 在策略约束下就地编辑真实仓库，差异始终可见 |
+| **验证** | 运行检查，将失败反馈给自身，无法通过时停下 |
+| **评审** | 展示变更内容，可逐文件保留或回退，且绝不代你提交 |
+| **部署** | 发布站点、认领域名并为二者付费——凭据始终不会到达模型 |
+| **运维** | 知晓自己部署了什么、部署在何处，使下次变更是更新而非遗弃 |
+
+最终目标是：工厂自主运行该循环，人类只出现在其真正关心的决策点上——批准计划、保留结果、授权支出。其间的一切都是 agent 的职责。
+
+## 当前进展
+
+OpenSoftwareFactory 是 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 的一个分叉，并以插件形式构建其上，由后者提供 agent 循环、工具策略、沙箱与持久会话。理解、规划、构建、验证与评审今天已可用，因为 harness 提供了它们。
+
+**部署尚不存在，这正是当前的里程碑。** 一个 agent，能把你工作目录中的项目发布到互联网上——发布预览、查询域名，并通过 [PromptPay](https://github.com/AaEll/PromptPay) 完成支付——且凭据不会到达模型。
+
+[`MVP.md`](MVP.md) 定义了范围：为何选择部署这一切片、它新增哪些能力接缝、实施计划，以及哪些内容被刻意排除。
 
 <a id="run"></a>
 
-## 运行
-
-### 通过 `npm` 运行
-
-安装 `Node.js`，然后运行：
-
-```sh
-npx @deepseek-ai/dsh web
-```
-
-该命令默认会在 `http://127.0.0.1:3080` 启动 Web UI，本机启动时还会用默认浏览器打开页面。通过 SSH 启动时只打印宿主机 URL，因为本地转发地址由 SSH 客户端或编辑器持有。传入 `--no-open` 可仅运行服务器而不打开浏览器。详见 [Web UI 指南](docs/user/guide/index.zh.md)。
-
 <a id="run-from-source"></a>
 
-### 从源码运行
+## 安装
 
-如需从仓库源码运行：
+需要 Node `^22.19 || >=24` 与 pnpm 11。
 
 ```sh
-git clone https://github.com/deepseek-ai/deepseek-harness.git
-cd deepseek-harness
+git clone git@github.com:eFactory-ai/OpenSoftwareFactory.git
+cd OpenSoftwareFactory
 pnpm install
 pnpm run build
-pnpm dsh web
 ```
 
-`pnpm run build` 会准备仓库产物。`pnpm dsh web` 会直接使用这些已构建产物，不会重新构建。
+将 `sf` 从本检出目录加入 `PATH`：
 
-## 社区与支持
+```sh
+cd apps/cli
+pnpm link --global
+cd ../..
+```
 
-- 通过 [GitHub Discussions](https://github.com/deepseek-ai/deepseek-harness/discussions) 提交反馈或 bug 报告。
-- 为你的插件仓库添加 [`dsh-plugin`](https://github.com/topics/dsh-plugin) 话题，便于被发现。
-- 欢迎加入 DeepSeek Harness 企微群：扫码添加企微小助手并填写入群问卷，完成后小助手会邀请你入群。
+确认 shell 解析到新的启动器：
 
-<table>
-  <thead>
-    <tr>
-      <th align="center">企微小助手</th>
-      <th align="center">入群问卷</th>
-      <th align="center">微信公众号</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td align="center"><img src="https://cdn.deepseek.com/harness/readme/community-wecom-assistant.png" alt="DeepSeek Harness 企微小助手二维码" width="180" height="180"></td>
-      <td align="center"><a href="https://trtgsjkv6r.feishu.cn/share/base/form/shrcnIt5twSVdLGD52KJBckGCgg"><img src="https://cdn.deepseek.com/harness/readme/community-wecom-survey.png" alt="DeepSeek Harness 入群问卷二维码" width="180" height="180"></a></td>
-      <td align="center"><img src="https://cdn.deepseek.com/harness/readme/community-wechat-official-account.png" alt="DeepSeek Harness 团队微信公众号二维码" width="180" height="180"></td>
-    </tr>
-  </tbody>
-</table>
+```sh
+type -a sf
+```
 
-## 参与贡献
+结果应指向 pnpm 的全局 bin 目录。如果另一个名为 `sf` 的程序排在前面，请删除或重命名旧命令，然后运行 `rehash` 并再次检查。
 
-参见 [CONTRIBUTING.md](CONTRIBUTING.zh.md)。
+## 运行
+
+```sh
+sf web                        # the browser UI at http://127.0.0.1:3080
+sf --profile headless "task"  # one shot in the current directory, then exit
+```
+
+若未做全局链接，同样的命令可通过 pnpm 执行，例如 `pnpm sf web`。
 
 ## 开发
 
-请先阅读[开发指南](docs/development.zh.md)与[架构文档](docs/architecture.zh.md)。
+先阅读 [`AGENTS.md`](AGENTS.md) 了解工作规则，[`MVP.md`](MVP.md) 了解我们正在构建的内容，[docs/architecture.zh.md](docs/architecture.zh.md) 了解 harness 的整体结构。
 
-面向 agent：请遵循 [AGENTS.md](AGENTS.md)。
+本仓库跟踪上游 DeepSeek Harness。请使用 `scripts/osf-sync.sh` 同步，切勿使用 `git rebase`——原因见 `AGENTS.md`。
 
 ## 许可证
 
-[MIT](LICENSE)
-
-第三方依赖及其许可证见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+[MIT](LICENSE)。上游 harness 源码与第三方依赖各自保留其许可证，详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
