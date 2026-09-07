@@ -11,3 +11,14 @@
 # Pairing records are generated from the three confirmed owner-blob pairs.
 # The worktree-local installer registers the fail-closed driver command.
 *.i18n.yaml merge=dsh-translation-pairing
+
+# Fork-owned branding: keep our version when syncing upstream.
+# Inert unless the driver is registered — scripts/osf-sync.sh does that.
+# MERGE ONLY. During a rebase Git treats upstream as "ours", so these
+# attributes silently discard our files instead of protecting them.
+README.md merge=ours
+README.zh.md merge=ours
+README.i18n.yaml merge=ours
+BRAND_GUIDELINES.md merge=ours
+BRAND_GUIDELINES.zh.md merge=ours
+BRAND_GUIDELINES.i18n.yaml merge=ours
