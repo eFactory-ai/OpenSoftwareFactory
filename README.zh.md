@@ -52,8 +52,18 @@ pnpm run build
 将 `sf` 从本检出目录加入 `PATH`：
 
 ```sh
-pnpm --dir apps/cli link --global
+cd apps/cli
+pnpm link --global
+cd ../..
 ```
+
+确认 shell 解析到新的启动器：
+
+```sh
+type -a sf
+```
+
+结果应指向 pnpm 的全局 bin 目录。如果另一个名为 `sf` 的程序排在前面，请删除或重命名旧命令，然后运行 `rehash` 并再次检查。
 
 ## 运行
 

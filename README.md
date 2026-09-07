@@ -50,8 +50,18 @@ pnpm run build
 Put `sf` on your `PATH` from the checkout:
 
 ```sh
-pnpm --dir apps/cli link --global
+cd apps/cli
+pnpm link --global
+cd ../..
 ```
+
+Confirm that your shell resolves the new launcher:
+
+```sh
+type -a sf
+```
+
+The result should point to pnpm's global bin directory. If another program named `sf` appears first, remove or rename that older command, then run `rehash` and check again.
 
 ## Run
 
