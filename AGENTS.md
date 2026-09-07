@@ -2,6 +2,18 @@
 
 DeepSeek Harness is an all-plugin Cordis agent harness. Read [docs/architecture.md](docs/architecture.md) before changing `packages/`; follow [docs/AGENTS.md](docs/AGENTS.md) for documentation.
 
+## Fork ownership
+
+Upstream owns this tree and we track it by merge, so every upstream file we edit is a conflict we pay for again on each sync.
+
+**Add capability as new packages**, placed by the [cookbook table](docs/cookbook/adding-a-package.md#1-create-the-package). Extend existing behavior through documented extension points, never by editing an upstream package's internals, `vendor/`, `apps/`, or `scripts/`.
+
+**Mount through our own bundle patch layer** ([bundles](docs/user/develop/basic/publish.md)), not by editing `packages/bundle/`. A new package's `references` entry in `tsconfig.host.json` or `tsconfig.client.json` is the one expected upstream edit ([registration](docs/cookbook/adding-a-package.md#2-register-it-in-the-root-configs)).
+
+**Sync with `scripts/osf-sync.sh`, never `git rebase`.** `.gitattributes` keeps our branded files through `merge=ours`; a rebase inverts that and drops them with no conflict.
+
+**Keep each PR small and atomic**: one goal, the tests that prove it, and no unrelated cleanup. Review checks goal consistency, test coverage, and cleanliness.
+
 ## Pre-stable APIs and released Session data
 
 Public APIs are pre-stable; update every consumer. Released Session JSONL follows [adjacent migration](.agents/notes/implemented/architecture/2026-08-31-released-session-format-migrations.md): body reads may add a version-named successor but never move, overwrite, or delete committed generations; predecessors imply neither fallback nor downgrade support. SQLite domains use monotonic `SCHEMA_VERSION`.
