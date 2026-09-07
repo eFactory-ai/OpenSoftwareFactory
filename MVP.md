@@ -33,9 +33,11 @@ A prior Python implementation reached the same conclusion from the other directi
 Three capability seams, each a complete Service Definition / Provider / Consumer trio, all new packages.
 
 ```
-packages/promptpay/
-  promptpay-broker/    Library, not model-facing. HTTP client, config, /authorize.
-                       Injected by the providers below. No ctx key the model can reach.
+packages/payments/
+  payments/            ctx.payments — authorize(PaymentRequest): Authorization
+                       Generic: budgets, vendor allowlists, and audited decisions
+                       are payment concepts, not PromptPay concepts
+  payments-promptpay/  Provider: the PromptPay broker over POST /authorize
 
 packages/deploy/
   deploy/              ctx.deploy — publish(SiteSpec) · get(id) · list()
@@ -48,12 +50,14 @@ packages/domain/
   domain-promptpay/    Provider over POST /domains/*
   domain-tool/         Consumer: model-facing tool; register gated on human approval
 
-packages/promptpay/promptpay-bundle/   dsh.bundle.patch — our mount layer
+packages/payments/payments-bundle/   dsh.bundle.patch — our mount layer
 ```
+
+The payment seam is named for the capability, not the vendor. PromptPay is one provider of it; a Service Definition named after its only provider cannot accept a second one without being renamed.
 
 Four constraints shape this:
 
-**`/authorize` sits behind the seam, never in front of it.** It is the call that spends money. As a model-facing tool, the model would decide when to pay. Instead both providers call it internally, and the human gate is `user-approval` on `domain.register`.
+**Authorization is not a model-facing tool.** Spending is the one action whose timing and amount the model must not choose. `deploy` and `domain.register` call `ctx.payments.authorize()` internally as part of completing a request the user already approved, and the human gate sits on the purchase, through `user-approval`. A `payments_authorize` tool with an amount argument inverts this: it makes spending a thing the model initiates rather than a consequence of work the user asked for. Budgets and vendor allowlists in the broker are a second line of defense and not a substitute for the first — they bound the damage, they do not decide the intent.
 
 **Site scoping is an explicit `resolve(request): SiteSpec` step**, not a default inside `publish()`. What gets published must respect `.gitignore` and be a site directory, not the whole repository.
 
@@ -65,12 +69,13 @@ Four constraints shape this:
 
 One goal per PR, each independently verifiable, each with its tests and an Agent Note.
 
-1. **`promptpay-broker`** — HTTP client, `Config`, `/healthz` and `/authorize`, recorded-response tests. No model surface, so it lands and is provable on its own.
-2. **`deploy` Service Definition** — the `Deployment` record, `SiteSpec`, and `resolve()` with `.gitignore`-aware scoping. Unit tests over scoping, including the empty and everything-ignored cases.
-3. **`deploy-promptpay`** — the provider. Recorded-response tests against `POST /previews`.
-4. **`deploy-tool`** — model-facing tool, session event, Host presenter, snapshot coverage. First PR where the model can deploy.
-5. **`domain` seam** — definition, provider, and tool together; `register` behind `user-approval`. A test proves denial through the executor, not through schema omission.
-6. **`promptpay-bundle` + cold start** — the patch layer, profile wiring, and one documented command that brings up PromptPay and the profile from nothing.
+1. **`payments` Service Definition** — `PaymentRequest`, `Authorization`, and the provider registry. Pure types and registration; no network, no model surface.
+2. **`payments-promptpay`** — the provider: HTTP client, `Config`, `/healthz` and `/authorize`, recorded-response tests.
+3. **`deploy` Service Definition** — the `Deployment` record, `SiteSpec`, and `resolve()` with `.gitignore`-aware scoping. Unit tests over scoping, including the empty and everything-ignored cases.
+4. **`deploy-promptpay`** — the provider, consuming `ctx.payments`. Recorded-response tests against `POST /previews`.
+5. **`deploy-tool`** — model-facing tool, session event, Host presenter, snapshot coverage. First PR where the model can deploy.
+6. **`domain` seam** — definition, provider, and tool together; `register` behind `user-approval`. A test proves denial through the executor, not through schema omission.
+7. **`payments-bundle` + cold start** — the patch layer, profile wiring, and one documented command that brings up PromptPay and the profile from nothing.
 
 ## Done when
 
